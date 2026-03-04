@@ -1,0 +1,12 @@
+$OUName="London"
+$DomainDN="DC=Adatum,DC=com"
+$OUPath="OU=$OUName,$DomainDN"
+# if AD OU London doesn't exist, create it. Else 
+if (Get-ADOrganizationalUnit -Filter "distinguishedName -eq '$OUPath'"){
+    Write-Host "$OUName OU already exists"
+}   else {
+    Write-Host "OU does not exist and has been created."
+    New-ADOrganizationalUnit -Name $OUName -Path $DomainDN
+}
+
+Get-ADOrganizationalUnit -Filter * | Select Name, distinguishedName
