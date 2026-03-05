@@ -31,3 +31,18 @@ $group = Get-MgGroup -ConsistencyLevel eventual -Count groupCount -Search '"Disp
 $user = Get-MgUser -UserId Allan@$verifiedDomain
 New-MgGroupMember -GroupId $group.id -DirectoryObjectId $user.id
 Get-MgGroupMember -GroupId $group.id
+
+# Managing Exchange Online
+Install-Module ExchangeOnlineManagement -force
+Connect-ExchangeOnline
+Get-EXOMailbox
+New-Mailbox -Room -Name BoardRoom
+Set-CalendarProcessing BoardRoom -AutomateProcessing AutoAccept
+
+# Connect to SharePoint Online
+Install-Module -Name Microsoft.Online.SharePoint.PowerShell -Scope CurrentUser
+Import-Module -Name Microsoft.Online.SharePoint.PowerShell
+[string]$verifiedDomain = "LODSA230445.onmicrosoft.com"
+$verifiedDomainShort = ($verifiedDomain -split '\.')[0]
+Connect-SPOService -Url "https://$verifiedDomainShort-admin.sharepoint.com"
+Get-SPOSite
