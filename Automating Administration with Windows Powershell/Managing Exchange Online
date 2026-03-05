@@ -1,0 +1,2 @@
+Install-Module ExchangeOnlineManagement -force
+Connect-ExchangeOnline
