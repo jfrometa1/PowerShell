@@ -7,7 +7,7 @@ Get-MgUser
 # Create a new administrative user
 $verifiedDomain = (Get-MgOrganization).VerifiedDomains[0].Name
 $PasswordProfile = @{  
-    "Password"="<password>";  
+    "Password"="<123qwe!@#QWE>";  
     "ForceChangePasswordNextSignIn"=$true  
 }  
 New-MgUser -DisplayName "Noreen Riggs" -UserPrincipalName "Noreen@$verifiedDomain" -AccountEnabled -PasswordProfile $PasswordProfile -MailNickName "Noreen"
