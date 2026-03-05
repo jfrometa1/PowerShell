@@ -46,3 +46,18 @@ Import-Module -Name Microsoft.Online.SharePoint.PowerShell
 $verifiedDomainShort = ($verifiedDomain -split '\.')[0]
 Connect-SPOService -Url "https://$verifiedDomainShort-admin.sharepoint.com"
 Get-SPOSite
+Get-SPOWebTemplate
+New-SPOSite -Url https://$verifiedDomainShort.sharepoint.com/sites/Sales -Owner noreen@$verifiedDomain -StorageQuota 256 -Template EHS#1 -NoWait
+Get-SPOSite | FL Url,Status
+Disconnect-SPOService
+
+# Managing Microsoft Teams
+Install-Module -Name MicrosoftTeams -Force -AllowClobber
+Connect-MicrosoftTeams
+Get-Team
+New-Team -DisplayName "Sales Team" -MailNickName "SalesTeam"
+$team = Get-Team -DisplayName "Sales Team"
+$team | FL
+$verifiedDomain = (Get-MgOrganization).VerifiedDomains[0].Name
+Add-TeamUser -GroupId $team.GroupId -User Allan@$verifiedDomain -Role Member
+Get-TeamUser -GroupId $team.GroupId
