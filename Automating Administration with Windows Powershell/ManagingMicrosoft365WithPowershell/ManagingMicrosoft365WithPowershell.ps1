@@ -6,21 +6,21 @@ Get-MgUser
 
 # Create a new administrative user
 $verifiedDomain = (Get-MgOrganization).VerifiedDomains[0].Name
-$PasswordProfile = @{  
-    "Password"="<123qwe!@#QWE>";  
-    "ForceChangePasswordNextSignIn"=$true  
+$PasswordProfile = @{
+    "Password"="<123qwe!@#QWE>";
+    "ForceChangePasswordNextSignIn"=$true
 }  
 New-MgUser -DisplayName "Noreen Riggs" -UserPrincipalName "Noreen@$verifiedDomain" -AccountEnabled -PasswordProfile $PasswordProfile -MailNickName "Noreen"
 $user = Get-MgUser -UserId "Noreen@$verifiedDomain"
-$role = Get-MgDirectoryRole | Where {$_.displayName -eq 'Global Administrator'}
-$OdataId = "https://graph.microsoft.com/v1.0/directoryObjects/" + $user.id  
-New-MgDirectoryRoleMemberByRef -DirectoryRoleId $role.id -OdataId $OdataId    
+$role = Get-MgDirectoryRole | Where-Object {$_.displayName -eq 'Global Administrator'}
+$OdataId = "https://graph.microsoft.com/v1.0/directoryObjects/" + $user.id
+New-MgDirectoryRoleMemberByRef -DirectoryRoleId $role.id -OdataId $OdataId
 Get-MgDirectoryRoleMember -DirectoryRoleId $role.id
 
 # Create and license a new user
 New-MgUser -DisplayName "Allan Yoo" -UserPrincipalName Allan@$verifiedDomain -AccountEnabled -PasswordProfile $PasswordProfile -MailNickName "Allan"
 Update-MgUser -UserId Allan@$verifiedDomain -UsageLocation US
-Get-MgSubscribedSku | FL
+Get-MgSubscribedSku | Format-List
 $SkuId = (Get-MgSubscribedSku | Where-Object { $_.SkuPartNumber -eq "Office_365_E5_(no_Teams)" }).SkuId
 Set-MgUserLicense -UserId Allan@$verifiedDomain -AddLicenses @{SkuId = $SkuId} -RemoveLicenses @()
 
@@ -48,7 +48,7 @@ Connect-SPOService -Url "https://$verifiedDomainShort-admin.sharepoint.com"
 Get-SPOSite
 Get-SPOWebTemplate
 New-SPOSite -Url https://$verifiedDomainShort.sharepoint.com/sites/Sales -Owner noreen@$verifiedDomain -StorageQuota 256 -Template EHS#1 -NoWait
-Get-SPOSite | FL Url,Status
+Get-SPOSite | Format-List Url,Status
 Disconnect-SPOService
 
 # Managing Microsoft Teams
@@ -57,7 +57,7 @@ Connect-MicrosoftTeams
 Get-Team
 New-Team -DisplayName "Sales Team" -MailNickName "SalesTeam"
 $team = Get-Team -DisplayName "Sales Team"
-$team | FL
+$team | Format-List
 $verifiedDomain = (Get-MgOrganization).VerifiedDomains[0].Name
 Add-TeamUser -GroupId $team.GroupId -User Allan@$verifiedDomain -Role Member
 Get-TeamUser -GroupId $team.GroupId
